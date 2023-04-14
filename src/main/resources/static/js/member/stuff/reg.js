@@ -66,13 +66,12 @@ Vue
 	data() {
 	  return {
         test:"?",
-        isActive:false,
+        isActive:true,
         file:[""],
         image:'',
         result:[],
         imageURL:'',     
         categoryList:[],
-        selectedbox:"0",
         stuff:{
             title: "아메리카노",
             place: "이촌동",
@@ -89,6 +88,14 @@ Vue
               }
             ]
           }
+        // [title : "아메리카노",
+        // place:"이촌동",
+        // numPeople:"3",
+        // deadline:"2018-12-15T10:11:22",
+        // price:"2000",
+        // url:"www.naver.com",
+        // content:"5000",
+        // imageList:[{"id":3,"name":"24324324","stuffId":3}]]
 	  };
 	},
 	
@@ -97,42 +104,104 @@ Vue
             this.isActive=!this.isActive;
         },
 
-       upload(){
-         console.log(this.stuff);
-         // var myHeaders = new Headers();
-         // myHeaders.append("Content-Type", "multipart/form-data");
+        // 공구상품 글 업로드
+        // stuffUploadHandler() {
 
-         var formData = new FormData(this.$refs.form);
-         // formData.append("stuff", this.stuff);
-        //  formData.append("imgs", this.file);
-        //  formData.append("title", this.stuff.title);
-        //  formData.append("place", this.stuff.place);
-        //  formData.append("numPeople", this.stuff.numPeople);
-        //  formData.append("deadline", this.stuff.deadline);
-        //  formData.append("price", this.stuff.price);
-        //  formData.append("url", this.stuff.url);
-        //  formData.append("content", this.stuff.content);
-        
 
-         var requestOptions = {
-           method: 'POST',
-           // headers: myHeaders,
-           body: formData,
-           redirect: 'follow'
-         };
+        //     console.log("hihi")
+        //     var myHeaders = new Headers();
+        //     myHeaders.append("Content-Type", "application/json");
+
+        //     // 여기만 바꿔주기!!**
+            
+        //     // this.stuff.imageList = imageUploadImage();
+        //     var raw = JSON.stringify(this.stuff);
+
+
+        //     var requestOptions = {
+        //         method: 'POST',
+        //         headers: myHeaders,
+        //         body: raw,
+        //         redirect: 'follow'
+        //     };
+            
+        //     // 목록 다시 갱신!!
+        //     fetch("http://${this.$store.state.host}/member/stuffs", requestOptions)
+        //         .then(response => response.text())
+        //         .then(result => {
+        //             console.log(result);
+        //             // imageUploadImage(result);
+        //         })
+        //         .catch(error => console.log('error', error));
+        // },
+
+        // JS를 이용한 AJAX 파일 업로드 
+        // imageUploadImage(e){
+            
+        //     // this.file = e.target.files[0];
+        //     // let file = e.target.files[0];
+            
+        //     this.file = e.target.files[0];
+        //     console.log(this.file);
+            
+        //     // let url = URL.createObjectURL(this.file);
+        //     // this.imageURL = url;
+        //     // console.log(url);
+        //     // 너무 열심히 찾아서 없애주기!!
+        //     // boundary를 찾지 못한다는 소리인데 Content-Type을 지정해두게 되면 
+        //     // Multipart boundary를 열심히 찾는구나~ 라고 이해하고 주석처리하니까
+            
+        //     var myHeaders = new Headers();
+        //     myHeaders.append("Content-Type", "multipart/form-data");
+            
+        //     var formdata = new FormData();
+        //     formdata.append("imgs", this.file);
+        //     formdata.append("stuff", this.stuff);
+        //     console.log(formdata);
+            
+        //     var requestOptions = {
+        //       method: 'POST',
+        //       headers: myHeaders,
+        //       body: formdata,
+        //       redirect: 'follow'
+        //     };
+            
+        //     fetch("http://${this.$store.state.host}/member/stuffs/upload", requestOptions)
+        //       .then(response => response.json())
+        //       .then(result => {
+        //         this.result = result
+        //         console.log(this.result);
+        //         console.log(result);
+        //         //stuffUploadHandler(result)
+        //         })
+        //       .catch(error => console.log('error', error));
+            
+        // },
+
+        upload(){
+          console.log(this.stuff);
+          // var myHeaders = new Headers();
+          // myHeaders.append("Content-Type", "multipart/form-data");
+
+          var formData = new FormData();
+          formData.append("stuff", this.stuff);
+          formData.append("imgs", this.file);
          
-         // 카테고리 id 넣어주기!!
 
-         // ** Post 요청은 먼저 JS로 와서 JS가 해당 RESTAPI url로 
-         // 요청 바디에 데이터를 실어서 해당 요청 바디에 대한 서버의 응답 데이터를 요청하고 
-         // 그 응답 데이터를 받아와서 비교해서 그 다음 AJAX를 동작 시킨다!
+          var requestOptions = {
+            method: 'POST',
+            // headers: myHeaders,
+            body: formData,
+            redirect: 'follow'
+          };
+          
+          // 카테고리 id 넣어주기!!
+          fetch("http://${this.$store.state.host}/member/stuffs/upload", requestOptions)
+            .then(response => response.text())
+            .then(result => console.log(result))
+            .catch(error => console.log('error', error));
 
-         fetch("http://localhost:8080/member/stuffs/upload", requestOptions)
-           .then(response => response.text())
-           .then(result => console.log(result))
-           .catch(error => console.log('error', error));
-
-       },
+        },
 
         // 썸네일 조작
         uploadImage(e){
@@ -145,14 +214,6 @@ Vue
             this.imageURL = url;
             
         },
-        numPeoplePlusHandler(stuff){
-		    if(this.stuff.numPeople>=1 && this.stuff.numPeople<16)
-		        this.stuff.numPeople++;
-        },
-        numPeopleMinusHandler(stuff){
-            if(this.stuff.numPeople>=2 && this.stuff.numPeople<=16)
-            this.stuff.numPeople--;
-        },
 
         loadCategory(){
           var requestOptions = {
@@ -160,11 +221,11 @@ Vue
             redirect: 'follow'
           };
           
-          fetch("http://localhost:8080/member/stuffs/categories", requestOptions)
+          fetch("http://${this.$store.state.host}/member/stuffs/categories", requestOptions)
             .then(response => response.json())
             .then(categoryList => {
-              console.log(categoryList);
-              this.categoryList = categoryList;
+              this.categoryList = categoryList
+              console.log(this);
             })
             .catch(error => console.log('error', error));
         }
@@ -177,13 +238,11 @@ Vue
 		console.log("mounted")
         
         // this.imageUploadImage();
-		    // this.stuffUploadHandler();
         this.uploadImage();
         this.upload();
-        
-        this.loadCategory();
-
+		    // this.stuffUploadHandler();
         this.dnoneHandler();
+        this.loadCategory();
 	},
 	beforeUpdate(){console.log("beforeUpdate")},
 	updated(){console.log("updated")},
